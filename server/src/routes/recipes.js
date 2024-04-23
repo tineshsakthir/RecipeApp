@@ -94,8 +94,8 @@ router.post("/", upload.single("image"), async (req, res) => {
 
     console.log("s3 result", await s3.send(command)); // Sending file to S3
   
-    const ingredients = await JSON.parse(req.body.instructions) ; 
-    const instructions = await JSON.parse(req.body.ingredients)  ;
+    const ingredients = await JSON.parse(req.body.ingredients)  ;
+    const instructions = await JSON.parse(req.body.instructions) ; 
     const newRecipe = new RecipeModel({ ...req.body, imageName: imageName,ingredients : ingredients , instructions : instructions }); // Creating new recipe document with uploaded image name
     const response = await newRecipe.save(); // Saving new recipe
 

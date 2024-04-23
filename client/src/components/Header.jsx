@@ -13,23 +13,24 @@ const Header = () => {
     window.localStorage.removeItem("userId");
     navigate("/auth");
   };
+  
   return (
-    <header>
-      <nav className="flex justify-between items-center">
-        <div className="bg-slate-600">
-          <img
-            className="h-16 "
-            src="https://image.similarpng.com/very-thumbnail/2021/09/Good-food-logo-design-on-transparent-background-PNG.png"
-            alt=""
-          />
+    <header className="bg-gray-900">
+      <nav className="container mx-auto flex justify-between items-center py-4">
+        <div>
+          <Link to="/">
+            <img
+              className="h-16"
+              src="https://image.similarpng.com/very-thumbnail/2021/09/Good-food-logo-design-on-transparent-background-PNG.png"
+              alt="Good Food Logo"
+            />
+          </Link>
         </div>
-        <ul className="flex justify-between gap-4 bg-slate-600">
+        <ul className="flex gap-4 text-white">
           <li>
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                `${isActive ? "active" : "inactive"}`
-              }
+              ClassName="font-bold"
             >
               Home
             </NavLink>
@@ -37,9 +38,7 @@ const Header = () => {
           <li>
             <NavLink
               to="/create-recipe"
-              className={({ isActive }) =>
-                `${isActive ? "active" : "inactive"}`
-              }
+              ClassName="font-bold"
             >
               Create Recipe
             </NavLink>
@@ -47,31 +46,26 @@ const Header = () => {
           <li>
             <NavLink
               to="/saved-recipe"
-              className={({ isActive }) =>
-                `${isActive ? "active" : "inactive"}`
-              }
+              ClassName="font-bold"
             >
               Saved Recipe
             </NavLink>
           </li>
         </ul>
-        <div className="bg-slate-600">
-          <ul>
+        <div>
+          <ul className="text-white">
             <li>
               {!cookie.access_token ? (
                 <NavLink
                   to="/auth"
-                  className={({ isActive }) =>
-                    `${isActive ? "active" : "inactive"}`
-                  }
+                  ClassName="font-bold"
                 >
                   Login/Register
                 </NavLink>
               ) : (
                 <button
-                  onClick={() => {
-                    logout();
-                  }}
+                  onClick={logout}
+                  className="font-bold"
                 >
                   Logout
                 </button>

@@ -1,42 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import getRecipes from '../utils/retrieveSavedRecipes.js'
 import BoxRecipe from '../components/BoxRecipe.jsx'
 
-
 const Home = () => {
+  const [recipes, setRecipes] = useState([]);
 
-  const [recipe, setRecipe] = useState([])
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  useEffect(()=>{
-    const fetchData = async () =>{
-      try{
-        const data = await getRecipes() ; 
-        console.log(data) ;
-        setRecipe(data) ;
-      }catch(err){
-        if(err) console.error(err) ;
-      }
+  const fetchData = async () => {
+    try {
+      const data = await getRecipes();
+      console.log(data);
+      setRecipes(data);
+    } catch (err) {
+      console.error(err);
     }
-    fetchData()
-  },[])
+  };
 
-  const printRecipe = () =>{
-    console.log(recipe)
-  }
-
+  const cachedRecipes = useMemo(() => {
+    return recipes;
+  }, [recipes]);
 
   return (
     <div>
-
-      {recipe.map((recip,index) =>{
-        return <BoxRecipe key={index} recipeName={recip.name} recipeIngredients={recip.ingredients} recipeInstruction={recip.instructions} recipeCookingTime= {recip.cookingTime} recipeImageUrl = {recip.imageName} recipeOwner={recip.userOwner} recipeId = {recip._id} />
-      })}
-
-      {/* {recipe && recipe.length ? recipe[0] : recipe[1]} */}
-      <button onClick={printRecipe}>click</button>
+      {cachedRecipes.map((recipe, index) => (
+        <BoxRecipe
+          key={index}
+          recipeName={recipe.name}
+          recipeIngredients={recipe.ingredients}
+          recipeInstruction={recipe.instructions}
+          recipeCookingTime={recipe.cookingTime}
+          recipeImageUrl={recipe.imageName}
+          recipeOwner={recipe.userOwner}
+          recipeId={recipe._id}
+        />
+      ))}
     </div>
-  )
+  );
+};
 
-}
 
-export default Home
+
+export default Home ;

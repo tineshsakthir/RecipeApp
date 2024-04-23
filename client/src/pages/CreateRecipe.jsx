@@ -2,12 +2,14 @@ import React from "react";
 import { useState } from "react"; // Importing useState hook from React
 import axios from "axios"; // Importing Axios for making HTTP requests
 import config from "../configuration/config"; // Importing configuration
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 const InputComponent = React.memo(
   ({ name, value, onChange, onDelete, index }) => {
     return (
       <>
-        <label htmlFor="ingredient">Enter {name} Names : </label>
+        <div className="flex flex-row justify-center gap-3 items-center">
         <input
           placeholder={name}
           value={value}
@@ -16,9 +18,12 @@ const InputComponent = React.memo(
           id={name === "Instruction" ? "instruction" : "ingredient"}
           onChange={onChange}
           nth={index}
+          className="text-center border border-zinc-700 rounded-xl"
           required
         />
         <button onClick={onDelete}>Delete</button>
+        </div>
+        
       </>
     );
   }
@@ -26,6 +31,10 @@ const InputComponent = React.memo(
 
 // CreateRecipe component
 const CreateRecipe = () => {
+  const navigate  = useNavigate() ; 
+  const [cookie, setCookie] = useCookies(["access_token"]);
+
+  
   // State variables
   const [name, setName] = useState(""); // Recipe name
   const [ingredientsValues, setIngredientsValues] = useState([""]); // Ingredients list
@@ -82,6 +91,10 @@ const CreateRecipe = () => {
 
   // Create recipe form submission handler
   const handleCreateRecipeFormSubmit = async (event) => {
+    if(!cookie.access_token) {
+      alert("Please login the create a recipe!!!") ; 
+      return ;
+    }
     const userId = window.localStorage.getItem("userId");
     event.preventDefault();
     try {
@@ -115,13 +128,21 @@ const CreateRecipe = () => {
 
   // JSX
   return (
+    
+    <>
+   
+    <div className="md:p-10 md:ml-10">
+
     <form
       onSubmit={handleCreateRecipeFormSubmit}
-      className="flex flex-col justify-center align-middle"
+      className="flex flex-col container gap-8 mt-8 mb-8 items-center w-screen"
     >
-      {/* Recipe Name Input */}
-      <label htmlFor="name">Enter Recipe Name : </label>
+       <h3 className="text-center text-red-500">{!cookie.access_token ? "please login to create a recipe!!!!! Without login you can't submit the form" : ""}</h3>
+      <div className="flex flex-col md:flex-row justify-center items-center gap-3 border border-blue-900 rounded-md p-3">
+        {/* Recipe Name Input */}
+      <label className="text-center"  htmlFor="name">Enter Recipe Name : </label>
       <input
+        
         type="text"
         name="name"
         id="name"
@@ -129,9 +150,13 @@ const CreateRecipe = () => {
         onChange={(event) => {
           setName(event.target.value);
         }}
+        className="text-center border border-zinc-700 rounded-xl"
         required
       />
-      {/* Ingredient Inputs */}
+      </div>
+      <div className="flex flex-col container gap-3 items-center border border-blue-900 rounded-md p-0 pt-3 pb-3">
+        {/* Ingredient Inputs */}
+      <label htmlFor="ingredient" className="text-center">Enter Ingredients Names : </label>
       {ingredientsValues.map((val, index) => (
         <InputComponent
           key={index}
@@ -147,7 +172,8 @@ const CreateRecipe = () => {
         />
       ))}
       {/* Add Ingredient Button */}
-      <button onClick={handleAddIngredientButton}>Add Ingredient</button>
+      <button onClick={handleAddIngredientButton}>Add Another Ingredient</button>
+      </div>
 
       {instructionSteps.map((val, index) => {
         return (
@@ -166,7 +192,7 @@ const CreateRecipe = () => {
         );
       })}
 
-      <button onClick={handleAddInstructionButton}>Add Instruction</button>
+      <button onClick={handleAddInstructionButton}>Add Another Instruction</button>
 
       {/* Recipe Steps Textarea */}
       {/* <textarea
@@ -181,8 +207,9 @@ const CreateRecipe = () => {
         }}
         required
       ></textarea> */}
-      {/* Image Input */}
-      <label htmlFor="image">Insert Image</label>
+      <div className="flex flex-col md:flex-row items-center justify-center gap-3 border border-violet-600 p-3">
+        {/* Image Input */}
+      <label htmlFor="image">Insert Image : </label>
       <input
         type="file"
         name="image"
@@ -191,8 +218,10 @@ const CreateRecipe = () => {
           setImage(event.target.files[0]);
         }}
       />
-      {/* Cooking Time Input */}
-      <label htmlFor="cookingTime">Enter Cooking Time In Minutes : </label>
+      </div>
+     <div className="flex flex-col md:flex-row justify-center gap-3">
+       {/* Cooking Time Input */}
+       <label htmlFor="cookingTime">Enter Cooking Time In Minutes : </label>
       <input
         type="number"
         name="cookingTime"
@@ -201,10 +230,14 @@ const CreateRecipe = () => {
         onChange={(event) => {
           setCookingTime(event.target.value);
         }}
+        className="text-center border border-zinc-700 rounded-xl"
       />
+     </div>
       {/* Submit Button */}
-      <button type="submit">Add Recipe</button>
+      <button className="border border-black  shadow-orange-800 w-3/4  bg-green-400 rounded-lg" type="submit">Add Recipe</button>
     </form>
+    </div>
+    </>
   );
 };
 

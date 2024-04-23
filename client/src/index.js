@@ -10,6 +10,11 @@ import CreateRecipe from './pages/CreateRecipe';
 import SavedRecipe from './pages/SavedRecipe';
 import Auth from './pages/Auth';
 
+
+// import {disableReactDevTools} from '@fvilers/disable-react-devtools' ;
+
+// if(process.env.NODE_ENV === "production") disableReactDevTools() ; 
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element = {<Layout/>}>
