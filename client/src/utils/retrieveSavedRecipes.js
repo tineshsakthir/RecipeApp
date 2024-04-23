@@ -6,8 +6,7 @@ const getRecipes = async () => {
     // const recipe = await axios.get(`http://localhost:${config.backendPort}/recipe/`) 
     // The recipe will in the response.data
     const response = await axios.get(`http://localhost:${config.backendPort}/recipe/`) 
+    console.log(response.data)
     return response.data ;
-
 }
-
-export default getRecipes
+export default getRecipes ;

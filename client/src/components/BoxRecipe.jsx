@@ -1,6 +1,6 @@
 import React from 'react'
 
-const BoxRecipe = ({recipeName,recipeIngredients,recipeInstruction,recipeCookingTime,recipeOwner, recipeId }) => {
+const BoxRecipe = ({recipeName,recipeIngredients,recipeInstruction,recipeImageUrl,recipeCookingTime,recipeOwner, recipeId }) => {
   return (
     <div>
         <br />
@@ -19,7 +19,13 @@ const BoxRecipe = ({recipeName,recipeIngredients,recipeInstruction,recipeCooking
         <p>
             {recipeInstruction}
         </p>
-
+        <ul>
+            {recipeInstruction.map((instruction,index)=>{
+                return <li key={index+1}>  {index+1}. {instruction}</li>
+            })}
+        </ul>
+        <img src={recipeImageUrl} alt={recipeImageUrl}/>
+        <h1>Recipe image url :{recipeImageUrl}</h1>
         <h4>Recipe Owner : {recipeOwner}</h4>
         <h4>Recipe Id : {recipeId}</h4>
         <br />

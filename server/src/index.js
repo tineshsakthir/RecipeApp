@@ -2,6 +2,7 @@ import expres from "express" ;
 import cors from 'cors' ; 
 import mongoose from 'mongoose' ; 
 
+
 //import { userRouter } from "./routes/users"; Without .js got my app into crash
 import { userRouter } from "./routes/users.js";
 import { recipeRouter } from "./routes/recipes.js";
@@ -27,5 +28,5 @@ app.get("/" , (req,res)=>{
 mongoose.connect("mongodb+srv://tinesh:sakthi@recipes.n1lrkhu.mongodb.net/recipeApp?retryWrites=true&w=majority&appName=recipes")
 
 
-const PORT = 3001 ; 
+const PORT = 40025; 
 app.listen(PORT , ()=>{console.log(`listenning in the port ${PORT}`)})

@@ -1,5 +1,5 @@
 const config = {
-    backendPort : 3001
+    backendPort : 40025
 }
 
 module.exports = config
