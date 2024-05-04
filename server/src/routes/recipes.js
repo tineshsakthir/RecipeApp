@@ -41,6 +41,13 @@ const router = express.Router(); // Creating a router object using Express.js
 const storage = multer.memoryStorage(); // Creating Multer storage engine that stores files in memory as Buffer objects
 const upload = multer({ storage: storage }); // Creating Multer instance with configured storage engine
 
+
+import Redis from 'redis' ; 
+const redisClient = Redis.createClient() ; 
+
+await redisClient.connect() ; 
+
+
 /**
  * (GET)Route to get all recipes
  */
@@ -50,13 +57,26 @@ router.get("/", async (req, res) => {
     const recipes = await RecipeModel.find({}); // Finding all recipes
     const newRecipes = [];
     for (let recipe of recipes) {
-      const getObjectParams = {
-        Bucket: bucketName,
-        Key: recipe.imageName,
-      };
-      const command = new GetObjectCommand(getObjectParams);
-      const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-      console.log(url);
+
+      let url = ""
+
+      url = await redisClient.get(recipe.imageName) ; 
+      if(url === null || url === ""){
+        const getObjectParams = {
+          Bucket: bucketName,
+          Key: recipe.imageName,
+        };
+        const command = new GetObjectCommand(getObjectParams);
+        url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        console.log(url);
+        await redisClient.setEx(recipe.imageName , 3600 , url ) ; 
+      }
+
+      
+      
+
+
+      
       recipe["imageName"] = url;
       newRecipes.push(recipe);
     }
@@ -65,6 +85,23 @@ router.get("/", async (req, res) => {
     console.log(err); // Logging any errors
   }
 });
+
+
+
+// const getOrSetImageUrl = (key,cb) => {
+//   return new Promise( (reject,resolve) => {
+//     redisClient.get(key ,async (err,data) => {
+//       if(err) return reject(err) ; 
+//       if(data != null) {
+//         return resolve(JSON.parse(data))
+//       }
+//       const freshData =await cb() ;
+//       redisClient.setEx(key,REDIS_EXPIRATION_TIME, JSON.stringify(freshData) ) ; 
+//       resolve(freshData); 
+//     })
+
+//   })
+// }
 
 /**
  * (POST)Route to add a new recipe
